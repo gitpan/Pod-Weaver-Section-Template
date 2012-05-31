@@ -1,6 +1,9 @@
 package Pod::Weaver::Section::Template;
 BEGIN {
-  $Pod::Weaver::Section::Template::VERSION = '0.01';
+  $Pod::Weaver::Section::Template::AUTHORITY = 'cpan:DOY';
+}
+{
+  $Pod::Weaver::Section::Template::VERSION = '0.02';
 }
 use Moose;
 # ABSTRACT: add pod section from a Text::Template template
@@ -34,6 +37,7 @@ has template => (
 has header => (
     is      => 'ro',
     isa     => 'Str',
+    lazy    => 1,
     default => sub { shift->plugin_name },
 );
 
@@ -114,6 +118,16 @@ sub _get_zilla_hash {
     return %zilla_hash;
 }
 
+sub _template_error
+{
+  my ($self, %e) = @_;
+
+  # Put the template's filename into the error message:
+  $e{error} =~ s/(?<= at )template(?= line \d)/ $self->template /eg;
+
+  $self->log_fatal($e{error});
+}
+
 sub weave_section {
     my $self = shift;
     my ($document, $input) = @_;
@@ -128,9 +142,12 @@ sub weave_section {
         unless -r $self->template;
     my $pod = fill_in_file(
         $self->template,
+        BROKEN     => sub { $self->_template_error(@_) },
         DELIMITERS => $self->delim,
         HASH       => {
             $zilla ? ($self->_get_zilla_hash($zilla)) : (),
+            filename => $input->{filename},
+            plugin   => \$self,
             %{ $self->extra_args },
         },
     );
@@ -158,7 +175,7 @@ Pod::Weaver::Section::Template - add pod section from a Text::Template template
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
@@ -171,7 +188,9 @@ version 0.01
 
 This plugin generates a pod section based on the contents of a template file.
 The template is parsed using L<Text::Template>, and is then interpreted as pod.
-When parsing the template, any options specified in the plugin configuration
+When parsing the template, C<$filename> will be the name of the file being
+woven (if that was passed to L<Pod::Weaver>), and C<$plugin> will be this
+plugin. Any options specified in the plugin configuration
 which aren't configuration options for this plugin will be provided as
 variables for the template. Also, if this is being run as part of a
 L<Dist::Zilla> build process, the values of all of the attributes on the
@@ -195,70 +214,32 @@ If L<Pod::Weaver> is being run through L<Dist::Zilla>, this option determines
 whether to add the section to each module in the distribution, or to just the
 distribution's main module. Defaults to false.
 
+=head1 SEE ALSO
+
+L<Text::Template>
+L<Pod::Weaver>
+L<Dist::Zilla>
+
 =for Pod::Coverage   BUILD
   weave_section
 
-=head1 BUGS
-
-No known bugs.
-
-Please report any bugs through RT: email
-C<bug-pod-weaver-section-template at rt.cpan.org>, or browse to
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Pod-Weaver-Section-Template>.
-
-=head1 SEE ALSO
+=head1 AUTHORS
 
 =over 4
 
 =item *
 
-L<Text::Template>
+Jesse Luehrs <doy at tozt dot net>
 
 =item *
 
-L<Pod::Weaver>
-
-=item *
-
-L<Dist::Zilla>
+Christopher J. Madsen <perl at cjmweb dot net>
 
 =back
-
-=head1 SUPPORT
-
-You can find this documentation for this module with the perldoc command.
-
-    perldoc Pod::Weaver::Section::Template
-
-You can also look for information at:
-
-=over 4
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Pod-Weaver-Section-Template>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Pod-Weaver-Section-Template>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Pod-Weaver-Section-Template>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Pod-Weaver-Section-Template>
-
-=back
-
-=head1 AUTHOR
-
-  Jesse Luehrs <doy at tozt dot net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Jesse Luehrs.
+This software is copyright (c) 2012 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

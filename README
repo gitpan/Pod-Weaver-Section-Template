@@ -1,11 +1,11 @@
 
 
 This archive contains the distribution Pod-Weaver-Section-Template,
-version 0.01:
+version 0.02:
 
   add pod section from a Text::Template template
 
-This software is copyright (c) 2010 by Jesse Luehrs.
+This software is copyright (c) 2012 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

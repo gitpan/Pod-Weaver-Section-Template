@@ -4,28 +4,30 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'add pod section from a Text::Template template',
-  'AUTHOR' => 'Jesse Luehrs <doy at tozt dot net>',
-  'BUILD_REQUIRES' => {},
-  'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31'
+  "ABSTRACT" => "add pod section from a Text::Template template",
+  "AUTHOR" => "Jesse Luehrs <doy at tozt dot net>, Christopher J. Madsen <perl at cjmweb dot net>",
+  "BUILD_REQUIRES" => {
+    "Test::More" => "0.88"
   },
-  'DISTNAME' => 'Pod-Weaver-Section-Template',
-  'EXE_FILES' => [],
-  'LICENSE' => 'perl',
-  'NAME' => 'Pod::Weaver::Section::Template',
-  'PREREQ_PM' => {
-    'Pod::Weaver' => '0',
-    'Text::Template' => '0'
+  "CONFIGURE_REQUIRES" => {
+    "ExtUtils::MakeMaker" => "6.30"
   },
-  'VERSION' => '0.01',
-  'test' => {
-    'TESTS' => 't/*.t'
+  "DISTNAME" => "Pod-Weaver-Section-Template",
+  "EXE_FILES" => [],
+  "LICENSE" => "perl",
+  "NAME" => "Pod::Weaver::Section::Template",
+  "PREREQ_PM" => {
+    "Pod::Weaver" => 0,
+    "Text::Template" => 0
+  },
+  "VERSION" => "0.02",
+  "test" => {
+    "TESTS" => "t/*.t"
   }
 );
 
