@@ -3,7 +3,7 @@ BEGIN {
   $Pod::Weaver::Section::Template::AUTHORITY = 'cpan:DOY';
 }
 {
-  $Pod::Weaver::Section::Template::VERSION = '0.02';
+  $Pod::Weaver::Section::Template::VERSION = '0.03';
 }
 use Moose;
 # ABSTRACT: add pod section from a Text::Template template
@@ -167,6 +167,7 @@ no Moose;
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -175,7 +176,7 @@ Pod::Weaver::Section::Template - add pod section from a Text::Template template
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
@@ -245,4 +246,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
